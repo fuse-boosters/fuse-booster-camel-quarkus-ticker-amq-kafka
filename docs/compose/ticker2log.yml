@@ -1,0 +1,7 @@
+version: "2"
+
+services:
+
+  ticker2log:
+    container_name: ticker2log
+    image: nessusio/fuse-booster-camel-quarkus-ticker2log

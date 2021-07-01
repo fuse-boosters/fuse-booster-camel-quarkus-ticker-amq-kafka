@@ -2,9 +2,12 @@
 .classpath
 .project
 .settings
-target
 
 .externalToolBuilders
 .odo/env
 .odo/odo-file-index.json
+
+maven-wrapper.jar
 */main/docker
+
+target
