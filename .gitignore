@@ -1,0 +1,10 @@
+.DS_Store
+.classpath
+.project
+.settings
+target
+
+.externalToolBuilders
+.odo/env
+.odo/odo-file-index.json
+*/main/docker
