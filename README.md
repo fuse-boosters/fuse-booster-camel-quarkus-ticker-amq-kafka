@@ -41,7 +41,7 @@ The application can be packaged using:
 
 ## Deploy on OpenShift
 
-You can build, deploy and run this example by pushing it to your [OpenShift Sandbox](https://developers.redhat.com/developer-sandbox/get-started) like this ...
+You can build, deploy and run this example by pushing it to your [OpenShift Sandbox](https://developers.redhat.com/developer-sandbox) like this ...
 
     odo push
 

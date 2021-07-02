@@ -1,4 +1,44 @@
 schemaVersion: 2.0.0
+
+# API Reference
+# https://docs.devfile.io/devfile/2.1.0/user-guide/api-reference.html
+#
+# Here another sample project that provides you with a basic express app 
+# https://github.com/redhat-developer/devfile-sample/blob/master/devfile.yaml
+#
+# metadata           - Metadata (optional)
+#   name             - Devfile name (optional)
+#   version          - Sematic version (optional)
+#   displayName      - Devfile display name (optional)
+#   description      - Devfile description (optional)
+#   tags             - Devfile tags (optional)
+#   projectType      - Devfile project type (optional)
+#   language         - Devfile language (optional)
+#
+# starterProjects    - StarterProjects can be used as a starting point when bootstrapping new projects
+#   name             - Project name
+#   git              - Project's Git source
+#     remotes        - The remotes map which should be initialized in the git project
+#
+# components         - List of the devworkspace components, such as editor and plugins, user-provided containers
+#   name             - Name that allows referencing the component from other elements
+#   container        - Allows adding and configuring devworkspace-related containers
+#     image          - The container image coordinates
+#     memoryLimit    - Container memory limit
+#     mountSources   - Toggles whether or not the project source code should be mounted in the component
+#     volumeMounts   - List of volumes mounts that should be mounted is this container
+#       name         - The volume mount name is the name of an existing Volume component
+#       path         - The path in the component container where the volume should be mounted
+#
+# commands           - Predefined, ready-to-use, devworkspace-related commands
+#   id               - Identifier that allows referencing this command in composite commands, from a parent, or in events
+#   exec             - CLI Command executed in an existing component container
+#     component      - Describes component to which given action relates
+#     commandLine    - The actual command-line string
+#     group          - Defines the group this command is part of
+#       kind         - Kind of group the command is part of
+#       isDefault    - Identifies the default command for a given group kind
+
 metadata:
   name: camel-quarkus-ticker2log
   version: 1.1.0
@@ -7,11 +47,13 @@ metadata:
   tags: [Camel, Quarkus, Maven, Java]
   projectType: maven
   language: java
+  
 starterProjects:
   - name: ticker2log
     git:
       remotes:
         origin: "https://github.com/fuse-boosters/fuse-booster-camel-quarkus-ticker2log.git"
+        
 components:
   - name: tools
     container:
@@ -23,6 +65,7 @@ components:
           path: /home/user/.m2
   - name: m2
     volume: {}
+    
 commands:
   - id: mvn-package
     exec:
