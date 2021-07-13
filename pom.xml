@@ -3,7 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>com.redhat.fuse.boosters</groupId>
+  <parent>
+    <groupId>com.redhat.fuse.boosters</groupId>
+    <artifactId>fuse-booster-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  
   <artifactId>fuse-booster-camel-quarkus-ticker2log</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   
@@ -13,33 +18,11 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <quarkus.platform.version>1.13.7.Final</quarkus.platform.version>
-    
     <!-- Docker Image -->
     <quarkus.container-image.build>false</quarkus.container-image.build>
     <quarkus.container-image.group>nessusio</quarkus.container-image.group>
     <quarkus.container-image.tag>latest</quarkus.container-image.tag>
-    
-    <!-- Plugin versions -->
-    <version-quarkus-plugin>1.13.7.Final</version-quarkus-plugin>
-    <version-maven-compiler-plugin>3.8.1</version-maven-compiler-plugin>
-    <version-maven-jar-plugin>3.2.0</version-maven-jar-plugin>
-    <version-maven-release-plugin>2.5</version-maven-release-plugin>
-    <version-maven-resources-plugin>3.1.0</version-maven-resources-plugin>
-    <version-maven-surefire-plugin>3.0.0-M5</version-maven-surefire-plugin>
   </properties>
-  
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-universe-bom</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   
   <dependencies>
     <dependency>
@@ -75,45 +58,6 @@
   </dependencies>
   
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>io.quarkus</groupId>
-          <artifactId>quarkus-maven-plugin</artifactId>
-          <version>${version-quarkus-plugin}</version>
-          <extensions>true</extensions>
-          <executions>
-            <execution>
-              <goals>
-                <goal>build</goal>
-                <goal>generate-code</goal>
-                <goal>generate-code-tests</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${version-maven-compiler-plugin}</version>
-          <configuration>
-            <source>11</source>
-            <target>11</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${version-maven-surefire-plugin}</version>
-          <configuration>
-            <systemPropertyVariables>
-              <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-              <maven.home>${maven.home}</maven.home>
-            </systemPropertyVariables>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>io.quarkus</groupId>
@@ -128,12 +72,17 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>docker</id>
-      <properties>
-        <quarkus.container-image.build>true</quarkus.container-image.build>
-      </properties>
-    </profile>
-  </profiles>
+  <repositories>
+    <repository>
+      <id>fusesource-releases</id>
+      <url>https://repository.jboss.org/nexus/content/groups/fs-public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  
 </project>
