@@ -15,7 +15,7 @@ If you want to learn more about Quarkus, please visit its website: [https://quar
 
 The application can be packaged using
 
-	mvnw clean package
+	./mvnw clean package
 
 The application can now be run using 
 
@@ -29,7 +29,7 @@ Supported application config parameters are
 
 The application can be packaged using:
 
-	mvnw clean package -Pdocker
+	./mvnw clean package -Pdocker
 
 ## Running with Docker
 

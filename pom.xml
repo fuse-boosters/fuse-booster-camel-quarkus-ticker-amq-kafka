@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.redhat.fuse.boosters</groupId>
     <artifactId>fuse-booster-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </parent>
   
   <artifactId>fuse-booster-camel-quarkus-ticker2log</artifactId>
@@ -82,4 +82,12 @@
     </repository>
   </repositories>
   
+  <profiles>
+    <profile>
+      <id>docker</id>
+      <properties>
+        <quarkus.container-image.build>true</quarkus.container-image.build>
+      </properties>
+    </profile>
+  </profiles>
 </project>
