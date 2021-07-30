@@ -15,9 +15,6 @@
   <name>Fuse :: Camel :: Quarkus :: Ticker to Log</name>
   
   <properties>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
     <!-- Docker Image -->
     <quarkus.container-image.build>false</quarkus.container-image.build>
     <quarkus.container-image.group>nessusio</quarkus.container-image.group>
