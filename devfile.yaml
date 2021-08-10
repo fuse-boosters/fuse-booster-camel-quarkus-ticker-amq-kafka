@@ -1,4 +1,4 @@
-schemaVersion: 2.0.0
+schemaVersion: 2.1.0
 
 # API Reference
 # https://docs.devfile.io/devfile/2.1.0/user-guide/api-reference.html
@@ -41,7 +41,7 @@ schemaVersion: 2.0.0
 
 metadata:
   name: camel-quarkus-ticker2log
-  version: 1.1.0
+  version: 1.0.0
   displayName: Camel Quarkus Crypto Ticker
   description: Provides a simple crypto ticker based on Camel Quarkus.
   tags: [Camel, Quarkus, Maven, Java]
@@ -49,13 +49,72 @@ metadata:
   language: java
   
 starterProjects:
-  - name: ticker2log
+  - name: ticker-amq-kafka
     git:
       remotes:
-        origin: "https://github.com/fuse-boosters/fuse-booster-camel-quarkus-ticker2log.git"
+        origin: "https://github.com/fuse-boosters/fuse-booster-camel-quarkus-ticker-amq-kafka.git"
+      checkoutFrom:
+        revision: next
         
 components:
-  - name: tools
+
+  # Artemis Pod        
+  - name: artemis
+    container:
+      image: quay.io/nessusio/activemq-artemis:2.16.0-dev
+      dedicatedPod: true
+      env:
+        - name: ANONYMOUS_LOGIN
+          value: 'true'
+      endpoints:
+        - name: amqtcp
+          protocol: tcp
+          targetPort: 61616
+          exposure: internal
+      volumeMounts:
+        - name: artemis-instance
+          path: /var/lib/artemis-instance
+
+  # Kafka Pod        
+  - name: kafka
+    container:
+      image: quay.io/bitnami/kafka:2.8.0
+      dedicatedPod: true
+      env:
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: 'true'
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: $(CAMEL_QUARKUS_TICKER2LOG_PORT_2181_TCP_ADDR):2181
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: PLAINTEXT://$(CAMEL_QUARKUS_TICKER2LOG_PORT_9092_TCP_ADDR):9092
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: '1'
+        - name: KAFKA_BROKER_ID
+          value: '1'
+      endpoints:
+        - name: kafkatcp
+          protocol: tcp
+          targetPort: 9092
+          exposure: internal
+
+  # Zookeeper Pod        
+  - name: zookeeper
+    container:
+      image: quay.io/bitnami/zookeeper:3.7.0
+      dedicatedPod: true
+      env:
+        - name: ALLOW_ANONYMOUS_LOGIN
+          value: 'true'
+        - name: ZOOKEEPER_CLIENT_PORT
+          value: '2181'
+      endpoints:
+        - name: zktcp
+          protocol: tcp
+          targetPort: 2181
+          exposure: internal
+
+  # Maven Pod        
+  - name: camel
     container:
       image: quay.io/eclipse/che-java11-maven:nightly
       memoryLimit: 512Mi
@@ -63,27 +122,32 @@ components:
       volumeMounts:
         - name: m2
           path: /home/user/.m2
+          
+  # Volumes
+  - name: artemis-instance
+    volume:
+      ephemeral: true
   - name: m2
     volume: {}
     
 commands:
   - id: mvn-package
     exec:
-      component: tools
+      component: camel
       commandLine: "mvn -Dmaven.repo.local=/home/user/.m2/repository package"
       group:
         kind: build
         isDefault: true
   - id: run 
     exec:
-      component: tools
+      component: camel
       commandLine: "java -jar target/quarkus-app/quarkus-run.jar"
       group:
         kind: run
         isDefault: true
   - id: debug
     exec:
-      component: tools
+      component: camel
       commandLine: "java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=${DEBUG_PORT},suspend=n -jar target/quarkus-app/quarkus-run.jar"
       group:
         kind: debug
