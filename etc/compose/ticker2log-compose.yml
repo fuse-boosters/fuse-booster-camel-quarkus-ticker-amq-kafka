@@ -1,0 +1,49 @@
+version: "2"
+
+services:
+
+  artemis:
+    container_name: artemis
+    image: quay.io/nessusio/activemq-artemis:2.16.0-dev
+    environment:
+      ANONYMOUS_LOGIN: "true"
+    ports:
+      - "61616:61616"
+    volumes:
+      - "artemis-instance:/var/lib/artemis-instance"
+      
+  kafka:
+    container_name: kafka
+    image: quay.io/bitnami/kafka:2.8.0
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: "true"
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+    ports:
+      - "9092:9092"
+      
+  zookeeper:
+    container_name: zookeeper
+    image: quay.io/bitnami/zookeeper:3.7.0
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: 'true'
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+      
+  camel:
+    container_name: camel
+    image: nessusio/fuse-booster-camel-quarkus-ticker-amq-kafka
+    environment:
+      CAMEL_QUARKUS_TICKER2LOG_XCHANGE_CURRENCYPAIR: "ADA/USDT"
+      CAMEL_QUARKUS_TICKER2LOG_PORT_61616_TCP_ADDR: "artemis"
+      CAMEL_QUARKUS_TICKER2LOG_PORT_9092_TCP_ADDR: "kafka"
+      CAMEL_QUARKUS_TICKER2LOG_ARTEMIS_QUEUE: "ticker"
+      CAMEL_QUARKUS_TICKER2LOG_KAFKA_TOPIC: "ticker"
+      
+volumes:
+  artemis-instance:
+        
+    

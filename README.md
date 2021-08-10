@@ -1,4 +1,4 @@
-# fuse-booster-camel-quarkus-ticker2log
+# fuse-booster-camel-quarkus-ticker-amq-kafka
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -6,7 +6,9 @@ If you want to learn more about Quarkus, please visit its website: [https://quar
 
 ## Camel Components 
 
+* camel-quarkus-activemq
 * camel-quarkus-jackson
+* camel-quarkus-kafka
 * camel-quarkus-log
 * camel-quarkus-timer
 * camel-quarkus-xchange
@@ -15,29 +17,24 @@ If you want to learn more about Quarkus, please visit its website: [https://quar
 
 The application can be packaged using
 
-	./mvnw clean package
+	./mvnw clean package -Pdocker
 
 The application can now be run using 
 
-	java -jar target/quarkus-app/quarkus-run.jar
-
-Supported application config parameters are
-
-* ticker2log.xchange.currencypair
-
-## Building Docker images
-
-The application can be packaged using:
-
-	./mvnw clean package -Pdocker
-
-## Running with Docker
-
 	# Run all images
-	docker-compose -f docs/compose/ticker2log.yml up --detach && docker logs -f ticker2log
+	docker-compose -f etc/compose/ticker2log-compose.yml up --detach \
+		&& docker logs -f camel
 	
 	# Stop all images
-	docker-compose -f docs/compose/ticker2log.yml down
+	docker-compose -f etc/compose/ticker2log-compose.yml down
+
+## Supported application config parameters are
+
+	CAMEL_QUARKUS_TICKER2LOG_XCHANGE_CURRENCYPAIR: "ADA/USDT"
+	CAMEL_QUARKUS_TICKER2LOG_PORT_61616_TCP_ADDR: "artemis"
+	CAMEL_QUARKUS_TICKER2LOG_PORT_9092_TCP_ADDR: "kafka"
+	CAMEL_QUARKUS_TICKER2LOG_ARTEMIS_QUEUE: "ticker"
+	CAMEL_QUARKUS_TICKER2LOG_KAFKA_TOPIC: "ticker"
 
 ## Deploy on OpenShift
 
