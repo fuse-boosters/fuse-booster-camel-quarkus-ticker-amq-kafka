@@ -61,11 +61,13 @@ components:
   # Artemis Pod        
   - name: artemis
     container:
-      image: quay.io/nessusio/activemq-artemis:2.16.0-dev
+      image: quay.io/nessusio/activemq-artemis:2.16.0
       dedicatedPod: true
       env:
-        - name: ANONYMOUS_LOGIN
-          value: 'true'
+        - name: ARTEMIS_USERNAME
+          value: 'artemis'
+        - name: ARTEMIS_PASSWORD
+          value: 'artemis'
       endpoints:
         - name: amqtcp
           protocol: tcp
@@ -113,12 +115,27 @@ components:
           targetPort: 2181
           exposure: internal
 
-  # Maven Pod        
+  # Application Pod        
   - name: camel
     container:
       image: quay.io/eclipse/che-java11-maven:nightly
       memoryLimit: 512Mi
       mountSources: true
+      env:
+        - name: TICKER2LOG_XCHANGE_CURRENCYPAIR
+          value: 'ADA/USDT'
+        - name: TICKER2LOG_ARTEMIS_SERVICE_HOST
+          value: $(CAMEL_QUARKUS_TICKER2LOG_PORT_61616_TCP_ADDR)
+        - name: TICKER2LOG_ARTEMIS_USERNAME
+          value: 'artemis'
+        - name: TICKER2LOG_ARTEMIS_PASSWORD
+          value: 'artemis'
+        - name: TICKER2LOG_ARTEMIS_QUEUE
+          value: 'artemis'
+        - name: TICKER2LOG_KAFKA_SERVICE_HOST
+          value: $(CAMEL_QUARKUS_TICKER2LOG_PORT_9092_TCP_ADDR)
+        - name: TICKER2LOG_KAFKA_TOPIC
+          value: 'ticker'
       volumeMounts:
         - name: m2
           path: /home/user/.m2

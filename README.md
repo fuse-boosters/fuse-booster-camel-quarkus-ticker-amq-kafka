@@ -22,8 +22,7 @@ The application can be packaged using
 The application can now be run using 
 
 	# Run all images
-	docker-compose -f etc/compose/ticker2log-compose.yml up --detach \
-		&& docker logs -f camel
+	docker-compose -f etc/compose/ticker2log-compose.yml up --detach && docker logs -f camel
 	
 	# Stop all images
 	docker-compose -f etc/compose/ticker2log-compose.yml down
@@ -40,8 +39,17 @@ The application can now be run using
 
 You can build, deploy and run this example by pushing it to your [OpenShift Sandbox](https://developers.redhat.com/developer-sandbox) like this ...
 
+	# Deploy the devfile
     odo push
+    
+    # Delete the deployment
+    odo delete -f
 
+or
+ 
+	# Apply k8s deplyment script
+	oc apply -f etc/k8s/ticker2log-deployment.yaml  
+	
 When you then view the log of the running Pod, you should see output like this ...
 
 	...

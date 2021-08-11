@@ -17,7 +17,7 @@
   <properties>
     <!-- Docker Image -->
     <quarkus.container-image.build>false</quarkus.container-image.build>
-    <quarkus.container-image.group>nessusio</quarkus.container-image.group>
+    <quarkus.container-image.group>quay.io/nessusio</quarkus.container-image.group>
     <quarkus.container-image.tag>latest</quarkus.container-image.tag>
   </properties>
   

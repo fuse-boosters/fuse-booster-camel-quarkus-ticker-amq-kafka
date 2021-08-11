@@ -15,15 +15,19 @@ import org.knowm.xchange.dto.marketdata.Ticker;
 @ApplicationScoped
 public class TickerRoute extends RouteBuilder {
 
-	@ConfigProperty(name = "camel.quarkus.ticker2log.xchange.currencypair") 
+	@ConfigProperty(name = "ticker2log.xchange.currencypair") 
 	String pair;
-	@ConfigProperty(name = "camel.quarkus.ticker2log.port.61616.tcp.addr") 
+	@ConfigProperty(name = "ticker2log.artemis.service.host") 
 	String artemisHost;
-	@ConfigProperty(name = "camel.quarkus.ticker2log.port.9092.tcp.addr") 
-	String kafkaHost;
-	@ConfigProperty(name = "camel.quarkus.ticker2log.artemis.queue") 
+	@ConfigProperty(name = "ticker2log.artemis.username") 
+	String artemisUsername;
+	@ConfigProperty(name = "ticker2log.artemis.password") 
+	String artemisPassword;
+	@ConfigProperty(name = "ticker2log.artemis.queue") 
 	String artemisQueue;
-	@ConfigProperty(name = "camel.quarkus.ticker2log.kafka.topic") 
+	@ConfigProperty(name = "ticker2log.kafka.service.host") 
+	String kafkaHost;
+	@ConfigProperty(name = "ticker2log.kafka.topic") 
 	String kafkaTopic;
 	
 	@Override
@@ -48,6 +52,8 @@ public class TickerRoute extends RouteBuilder {
 	public RoutesDefinition configureRoutes(CamelContext context) throws Exception {
 		ActiveMQComponent amq = context.getComponent("activemq", ActiveMQComponent.class);
 		amq.setBrokerURL("tcp://" + artemisHost + ":61616");
+		amq.setUsername(artemisUsername);
+		amq.setPassword(artemisPassword);
 		return super.configureRoutes(context);
 	}
 }
