@@ -38,7 +38,7 @@ services:
       
   camel:
     container_name: camel
-    image: nessusio/fuse-booster-camel-quarkus-ticker-amq-kafka
+    image: quay.io/nessusio/fuse-booster-camel-quarkus-ticker-amq-kafka
     depends_on: 
       - artemis
       - kafka
