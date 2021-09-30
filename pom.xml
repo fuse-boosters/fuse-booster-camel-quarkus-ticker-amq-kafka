@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.redhat.fuse.boosters</groupId>
     <artifactId>fuse-booster-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
   </parent>
   
   <artifactId>fuse-booster-camel-quarkus-ticker-amq-kafka</artifactId>
@@ -15,12 +15,45 @@
   <name>Fuse :: Camel :: Quarkus :: Ticker > Artemis > Kafka</name>
   
   <properties>
+  
+    <!-- Component versions -->
+    <version.quarkus.platform>2.2.3.Final</version.quarkus.platform>
+    <version.knowm.xchange>5.0.11</version.knowm.xchange>
+
+    <!-- Plugin versions -->
+    
     <!-- Docker Image -->
     <quarkus.container-image.build>false</quarkus.container-image.build>
     <quarkus.container-image.group>quay.io/nessusio</quarkus.container-image.group>
     <quarkus.container-image.tag>latest</quarkus.container-image.tag>
   </properties>
   
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-universe-bom</artifactId>
+        <version>${version.quarkus.platform}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- 
+        [TODO] Remove knowm.xchange override
+        https://github.com/fuse-boosters/fuse-booster-camel-quarkus-ticker-amq-kafka/issues/15 
+      -->
+      <dependency>
+        <groupId>org.knowm.xchange</groupId>
+        <artifactId>xchange-binance</artifactId>
+        <version>${version.knowm.xchange}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.knowm.xchange</groupId>
+        <artifactId>xchange-core</artifactId>
+        <version>${version.knowm.xchange}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.camel.quarkus</groupId>
@@ -63,6 +96,25 @@
   </dependencies>
   
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-maven-plugin</artifactId>
+          <version>${version.quarkus.platform}</version>
+          <extensions>true</extensions>
+          <executions>
+            <execution>
+              <goals>
+                <goal>build</goal>
+                <goal>generate-code</goal>
+                <goal>generate-code-tests</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>io.quarkus</groupId>
